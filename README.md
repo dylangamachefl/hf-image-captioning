@@ -2,10 +2,8 @@
 title: Image Captioning Tool (Transformers)
 emoji: 🖼️
 colorFrom: green 
-colorTo: cyan  
+colorTo: yellow  
 sdk: streamlit
-sdk_version: 1.29.0 # Check your `streamlit --version`
-python_version: 3.9 # Check your `python --version`
 app_file: app.py
 pinned: false 
 ---
