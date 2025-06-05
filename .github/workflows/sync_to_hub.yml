@@ -1,0 +1,22 @@
+name: Sync to Hugging Face Hub
+
+on:
+  push:
+    branches:
+      - main # Or your default branch, e.g., master
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 # Checks out your repository under $GITHUB_WORKSPACE
+        with:
+          fetch-depth: 0 # Fetches all history for all branches and tags  
+
+      - name: Push to HF Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }} # The PAT you stored in GitHub secrets
+        run: |
+          git remote add space https://dylangamachefl:${HF_TOKEN}@huggingface.co/spaces/dylangamachefl/hf-image-captioning
+          
+          git push --force space main
