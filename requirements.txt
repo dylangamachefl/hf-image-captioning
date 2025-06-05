@@ -1,4 +1,5 @@
 streamlit
-requests
-python-dotenv
-pillow
+Pillow
+# For transformers and its core backend:
+transformers
+torch

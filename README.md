@@ -1,16 +1,18 @@
 ---
-title: Image Captioning Tool
-emoji: 🖼️ # Or any emoji you like
-colorFrom: green # Example color
-colorTo: yellow   # Example color
+title: Image Captioning Tool (Transformers)
+emoji: 🖼️
+colorFrom: green 
+colorTo: cyan  
 sdk: streamlit
+sdk_version: 1.29.0 # Check your `streamlit --version`
+python_version: 3.9 # Check your `python --version`
 app_file: app.py
 pinned: false 
 ---
 
-# 🖼️ Image Captioning Tool
+# 🖼️ Image Captioning Tool (using Transformers library)
 
-An interactive web application that generates descriptive captions for uploaded images using Hugging Face's state-of-the-art image captioning models via the Inference API. This is the fourth project in a 4-week AI project portfolio building challenge.
+An interactive web application that generates descriptive captions for uploaded images. This version **directly utilizes the Hugging Face `transformers` library** to load and run a state-of-the-art image captioning model locally within the application's environment. This is the fourth project in a 4-week AI project portfolio building challenge.
 
 **Live Demo:** [Link to your Deployed App on Hugging Face Spaces]
 
@@ -22,58 +24,56 @@ This application allows users to:
 1.  Upload an image (JPEG, PNG).
 2.  Receive an automatically generated textual caption describing the contents of the image.
 
-The project demonstrates the integration of Computer Vision capabilities through pre-trained models, showcasing how AI can understand and describe visual information.
+This project now demonstrates loading and running sophisticated AI models (specifically for Computer Vision and NLP) directly using the `transformers` library, including handling model caching and dependencies like PyTorch.
 
 ## 🎯 Problem Solved
 
-Generating relevant and accurate descriptions for images automatically has numerous applications, from aiding accessibility (e.g., alt text for visually impaired users) to content indexing and understanding visual data at scale. This tool provides a simple demonstration of this powerful AI capability, making advanced image understanding models accessible through a user-friendly interface.
+Generating relevant captions for images has applications in accessibility, content indexing, and visual data understanding. This tool showcases this capability by running a powerful model within the app, offering more control and potentially faster inference (after initial model load) compared to relying solely on external public APIs for every request, especially when such APIs might not be available for specific desired models.
 
 ## ✨ Skills Showcased
 
-*   **AI/ML Implementation:** Utilizing pre-trained Computer Vision models for image captioning.
-*   **Python:** Core programming language for backend logic, image processing, and API interaction.
-*   **ML Libraries (Conceptual):** Understanding the role and use of Hugging Face Transformers for multimodal tasks (image and text).
-*   **API Integration:** Connecting to and consuming the Hugging Face Inference API for image-based tasks.
-*   **Data Handling:**
-    *   Processing image uploads.
-    *   Sending image data (bytes) to the API.
-    *   Parsing JSON responses containing generated captions.
-*   **CV (using APIs):** Practical application of Computer Vision for image understanding and description.
+*   **AI/ML Implementation:**
+    *   **Loading and running pre-trained Computer Vision/NLP models directly with the Hugging Face `transformers` library.**
+    *   Utilizing the `pipeline` abstraction for ease of use.
+*   **Python:** Core programming language for backend logic, image processing, and model interaction.
+*   **ML Libraries:** Direct use of `transformers` and `torch` (PyTorch).
+*   **Model Caching:** Implementing efficient model loading using Streamlit's `@st.cache_resource`.
+*   **Data Handling:** Processing image uploads and preparing them for the model.
+*   **CV (using local models):** Practical application of Computer Vision for image understanding and description.
 *   **Web Development (UI):** Building an interactive user interface with Streamlit, including file uploading.
-*   **Libraries:** Use of `Pillow` for image manipulation and `python-dotenv` for API key management.
+*   **Libraries:** Use of `Pillow` for image manipulation.
+*   **Dependency Management:** Managing larger dependencies like `torch` and `transformers` in `requirements.txt`.
 *   **Version Control:** Git and GitHub for project management.
-*   **Deployment:** Deploying the application to Hugging Face Spaces.
+*   **Deployment:** Deploying the application (with its model dependencies) to Hugging Face Spaces.
 *   **Documentation:** Creating clear and concise project documentation (this README).
+*   **Adaptability & Problem Solving:** Pivoting from an API-based approach to a library-based approach when API limitations were encountered.
 
 ## 🛠️ How It Works
 
-1.  **Image Upload:** The user selects an image file (JPEG or PNG) using the Streamlit file uploader.
-2.  **Image Processing (Client-side):**
-    *   The uploaded file is read as bytes.
-    *   `Pillow` (PIL) is used to open and validate the image from these bytes.
+1.  **Model Loading (on App Startup):**
+    *   When the Streamlit application starts, a function decorated with `@st.cache_resource` is called to load an image captioning model (e.g., `Salesforce/blip-image-captioning-base`) using the `transformers.pipeline("image-to-text", ...)` utility.
+    *   The model is downloaded (if not already cached by `transformers`) and loaded into memory. This happens only once thanks to caching, making subsequent uses fast.
+2.  **Image Upload:** The user selects an image file (JPEG or PNG) using the Streamlit file uploader.
+3.  **Image Preparation:**
+    *   The uploaded file is read, and `Pillow` (PIL) is used to open it as a PIL Image object.
     *   The uploaded image is displayed in the UI.
-3.  **API Call Preparation:** When the "Generate Caption" button is clicked:
-    *   The raw image bytes are prepared for the API request.
-4.  **Hugging Face API Interaction:**
-    *   A POST request is made to the Hugging Face Inference API endpoint for a selected image captioning model (e.g., `Salesforce/blip-image-captioning-large` or `microsoft/git-base-coco`).
-    *   The image bytes are sent directly in the request body.
-    *   The Hugging Face API token (loaded securely from environment variables) is included in the request headers for authentication.
-5.  **Image Captioning:** The Hugging Face model processes the input image and generates a textual description (caption).
-6.  **Response Handling:** The application receives the API's JSON response, which typically contains a list with a dictionary, including the `generated_text` (the caption).
-7.  **Display Output:** The generated caption is extracted from the response and displayed to the user in the Streamlit interface. Error handling is implemented for API issues, model loading times, or unexpected responses.
+4.  **Caption Generation:** When the "Generate Caption" button is clicked:
+    *   The PIL Image object is passed directly to the loaded `transformers` pipeline (e.g., `captioner(pil_image_object)`).
+    *   The pipeline handles all necessary pre-processing of the image, feeds it to the model, and performs post-processing on the model's output.
+5.  **Display Output:**
+    *   The pipeline returns a list containing a dictionary with the `generated_text` (the caption).
+    *   This caption is extracted and displayed to the user. Error handling is in place for issues during model inference.
 
 ## 💻 Technologies Used
 
 *   **Programming Language:** Python 3.x
-*   **AI Models/API:**
-    *   Hugging Face Hub
-    *   Hugging Face Inference API (Free Tier)
-    *   Image Captioning Models (e.g., `Salesforce/blip-image-captioning-large`, `microsoft/git-base-coco`, `nlpconnect/vit-gpt2-image-captioning`)
+*   **Core AI/ML Libraries:**
+    *   **Hugging Face `transformers`:** For loading and running the image captioning model.
+    *   **`torch` (PyTorch):** As the backend deep learning framework for the model.
+*   **Image Captioning Model (example):** `Salesforce/blip-image-captioning-base` (or other compatible models).
 *   **Python Libraries:**
     *   `streamlit`: For building the web application UI.
-    *   `requests`: For making HTTP requests to the Hugging Face API.
     *   `Pillow` (PIL): For image processing and handling.
-    *   `python-dotenv`: For managing environment variables (like the API token) locally.
 *   **Version Control:** Git & GitHub
 *   **Deployment:** Hugging Face Spaces
 *   **Development Environment:** Visual Studio Code (or your preferred IDE), Python Virtual Environment (`venv` or `conda`)
@@ -89,68 +89,45 @@ To run this project locally, follow these steps:
     ```
 
 2.  **Set up a Python virtual environment:**
-    (Assuming you have a shared `venv` or `conda` environment in a parent `ai-portfolio` directory as per the overall plan)
+    (Activate your shared `ai-portfolio` environment or create a dedicated one)
     ```bash
-    # From within hf-image-captioning directory:
-    # Example for venv:
-    # For macOS/Linux:
-    source ../venv/bin/activate 
-    # For Windows (Git Bash or PowerShell):
-    # source ../venv/Scripts/activate
-    # For Windows (Command Prompt):
-    # ..\venv\Scripts\activate
-
-    # Example for conda (if your shared env is named 'ai_env'):
-    # conda activate ai_env 
-    ```
-    If you don't have the shared environment or prefer a dedicated one:
-    ```bash
-    python -m venv venv # Or: conda create -n hf_img_caption_env python=3.9
-    # Activate it:
-    # macOS/Linux: source venv/bin/activate
-    # Windows: venv\Scripts\activate
-    # Conda: conda activate hf_img_caption_env
+    # Example for activating shared venv:
+    # macOS/Linux: source ../venv/bin/activate
+    # Windows: ..\venv\Scripts\activate 
     ```
 
 3.  **Install dependencies:**
-    Make sure `Pillow` is included in your environment. If starting fresh or it's not in your shared venv:
+    This project has significant dependencies.
     ```bash
     pip install -r requirements.txt 
-    # Ensure requirements.txt includes: streamlit, requests, python-dotenv, Pillow
+    # Ensure requirements.txt includes: streamlit, Pillow, transformers, torch
     ```
+    *(Note: `torch` can be a large download. If you have a specific CUDA version for a GPU, you might install PyTorch separately following instructions from [pytorch.org](https://pytorch.org/) before `pip install -r requirements.txt` to ensure compatibility, though the default CPU version usually works fine for CPU inference.)*
 
-4.  **Set up your Hugging Face API Token:**
-    *   Ensure you have a `.env` file in the root of your main `ai-portfolio` project directory (i.e., one level above this `hf-image-captioning` project).
-    *   Add your Hugging Face API token to the `.env` file:
-        ```
-        HUGGING_FACE_API_TOKEN="your_hf_api_token_here"
-        ```
-    *   *Note: The `app.py` is configured to look for `.env` in the parent directory. If your `.env` file is elsewhere, you might need to adjust the `load_dotenv()` path in `app.py`.*
-
-5.  **Run the Streamlit application:**
+4.  **Run the Streamlit application:**
     ```bash
     streamlit run app.py
     ```
-    The application should open in your web browser.
+    *   **First Run Note:** The first time you run the app, the `transformers` library will download the specified model (e.g., `Salesforce/blip-image-captioning-base`), which can take several minutes and consume significant disk space (usually in `~/.cache/huggingface/hub/`). Subsequent runs will be much faster as the model will be cached.
+    *   The application should open in your web browser.
 
 ## 🖼️ Screenshot
 
-<!-- Add your screenshot here once the app is working -->
-![Application Screenshot](images/image-captioning-screenshot.png) 
+<!-- Add your screenshot here once the app is working locally -->
+![Application Screenshot](images/image-captioning-transformers-screenshot.png) 
 <!-- Make sure to create an 'images' folder and add your screenshot, 
-     or adjust the path if it's different. -->
+     and use a descriptive name. -->
 
 ## 🔮 Future Enhancements (Optional)
 
-*   **Multiple caption suggestions:** Some models can generate multiple candidate captions; display a few options.
-*   **Confidence scores:** If the API provides them, display confidence scores for captions.
-*   **Batch image captioning:** Allow users to upload multiple images or a zip file.
-*   **Model selection:** Allow users to choose between different available image captioning models.
+*   **Allow model selection:** Let users choose from a few different locally available captioning models.
+*   **More detailed error reporting:** For model loading or inference failures.
+*   **Explore quantization or smaller models:** For faster performance or reduced resource usage, especially if deploying to resource-constrained environments.
 
 ## 🙏 Acknowledgements
 
-*   The Hugging Face team for their incredible models, Inference API, and Spaces platform.
-*   The developers of Streamlit for making web app creation in Python so accessible.
-*   The developers of Pillow for the essential image manipulation library.
+*   The Hugging Face team for their `transformers` library, models, and Spaces platform.
+*   The developers of PyTorch for the underlying deep learning framework.
+*   The developers of Streamlit and Pillow.
 
 ---
