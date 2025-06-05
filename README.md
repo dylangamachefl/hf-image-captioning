@@ -2,7 +2,7 @@
 title: Image Captioning Tool
 emoji: 🖼️ # Or any emoji you like
 colorFrom: green # Example color
-colorTo: orange   # Example color
+colorTo: yellow   # Example color
 sdk: streamlit
 app_file: app.py
 pinned: false 
