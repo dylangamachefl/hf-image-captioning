@@ -111,10 +111,7 @@ To run this project locally, follow these steps:
 
 ## 🖼️ Screenshot
 
-<!-- Add your screenshot here once the app is working locally -->
-![Application Screenshot](images/image-captioning-transformers-screenshot.png) 
-<!-- Make sure to create an 'images' folder and add your screenshot, 
-     and use a descriptive name. -->
+![Screenshot 2025-06-25 at 13-39-47 Image Captioning Tool (Transformers)](https://github.com/user-attachments/assets/38fba30e-eca8-4dbb-91da-7617f131cc40)
 
 ## 🔮 Future Enhancements (Optional)
 
