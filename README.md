@@ -12,9 +12,9 @@ pinned: false
 
 An interactive web application that generates descriptive captions for uploaded images. This version **directly utilizes the Hugging Face `transformers` library** to load and run a state-of-the-art image captioning model locally within the application's environment. This is the fourth project in a 4-week AI project portfolio building challenge.
 
-**Live Demo:** [Link to your Deployed App on Hugging Face Spaces]
+**Live Demo:** [HF Image Captioning App](https://dylangamachefl-hf-image-captioning.hf.space)
 
-**Project Repository:** `https://github.com/dylangamachefl/hf-image-captioning`
+**Repo:** [GitHub - hf-image-captioning](https://github.com/dylangamachefl/hf-image-captioning)
 
 ## 📖 Overview
 
